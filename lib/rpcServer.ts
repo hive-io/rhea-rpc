@@ -128,7 +128,7 @@ export class RpcServer {
                 _response = await funcCall.callback.call(null, params);
             }
             return await this._sendResponse(_replyTo, _correlationId as string, _response, _reqMessage.body.type);
-        } catch (error) {
+        } catch (error: any) {
             if (!(error instanceof Error)) {
                 error = new Error(error);
             }
@@ -176,7 +176,6 @@ export class RpcServer {
     private extractParameterNames(func: Function) {
         const fnStr = func.toString().replace(this.STRIP_COMMENTS, '');
         const result = fnStr.slice(fnStr.indexOf('(') + 1, fnStr.indexOf(')')).match(this.ARGUMENT_NAMES);
-        if (result === null) return [];
         return result;
     }
 
@@ -218,7 +217,10 @@ export class RpcServer {
 
             // do a basic check to see if we know about all named parameters
             Object.keys(_funcDefParams.properties).map(function (p) {
-                const idx = _funcDefinedParams!.indexOf(p);
+                if (_funcDefinedParams === null) {
+                    throw new AmqpRpcUnknowParameterError(`unknown parameter: ${p} in ${functionDefintion.method}`);
+                }
+                const idx = _funcDefinedParams.indexOf(p);
                 if (idx === -1)
                     throw new AmqpRpcUnknowParameterError(`unknown parameter: ${p} in ${functionDefintion.method}`);
             });

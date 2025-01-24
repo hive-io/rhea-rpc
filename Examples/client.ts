@@ -4,6 +4,7 @@ import { ConnectionOptions } from 'rhea-promise';
 async function Main() {
     const _connectionOptions: ConnectionOptions = {
         host: 'localhost',
+        transport: 'tls',
     };
     const _client = await new RheaRpc().createAmqpClient(_connectionOptions);
     let _rpcClient = await _client.createRpcClient('amq.topic');
