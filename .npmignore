@@ -1,4 +1,4 @@
-lib/
+lib/**/*
 index.ts
 tsconfig.json
 .vscode/launch.json
@@ -7,3 +7,4 @@ dist/Examples
 .DS_Store
 .devcontainer/*
 test/*
+.drone.jsonnet
