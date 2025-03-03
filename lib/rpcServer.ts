@@ -121,7 +121,7 @@ export class RpcServer {
 
         try {
             let _response: any;
-            if (!overWriteArgs) {
+            if (!overWriteArgs && funcCall.arguments !== null) {
                 const args = funcCall.arguments.map(function (p: any) { return (typeof params[p] !== 'undefined' && params[p] !== null) ? params[p] : null; });
                 _response = await funcCall.callback.apply(null, args);
             } else {
