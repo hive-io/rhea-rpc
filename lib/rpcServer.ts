@@ -38,7 +38,8 @@ export class RpcServer {
             removeAdditional: true,
             ownProperties: true,
             validateSchema: true,
-            useDefaults: false
+            useDefaults: false,
+            allowUnionTypes: true,
         });
         this._options = options;
         this._session = session;
@@ -121,8 +122,11 @@ export class RpcServer {
 
         try {
             let _response: any;
-            if (!overWriteArgs && funcCall.arguments !== null) {
-                const args = funcCall.arguments.map(function (p: any) { return (typeof params[p] !== 'undefined' && params[p] !== null) ? params[p] : null; });
+            if (!overWriteArgs) {
+                let args: any[] = [];
+                if (Array.isArray(funcCall.arguments)) {
+                    args = funcCall.arguments.map(function (p: any) { return (typeof params[p] !== 'undefined' && params[p] !== null) ? params[p] : null; });
+                }
                 _response = await funcCall.callback.apply(null, args);
             } else {
                 _response = await funcCall.callback.call(null, params);
